@@ -1,0 +1,88 @@
+{
+  "categories": {
+    "languages": [
+      { "id": "python", "name": "Python", "aliases": ["python3", "py"], "domain": "Backend / Data / AI" },
+      { "id": "javascript", "name": "JavaScript", "aliases": ["js", "ecmascript"], "domain": "Frontend / Full-Stack" },
+      { "id": "typescript", "name": "TypeScript", "aliases": ["ts"], "domain": "Frontend / Full-Stack" },
+      { "id": "java", "name": "Java", "aliases": ["core java", "j2ee"], "domain": "Backend / Enterprise" },
+      { "id": "cpp", "name": "C++", "aliases": ["c/c++", "cpp"], "domain": "Systems / Performance" },
+      { "id": "csharp", "name": "C#", "aliases": ["c-sharp", ".net"], "domain": "Enterprise / Backend" },
+      { "id": "go", "name": "Go", "aliases": ["golang"], "domain": "Cloud / Systems / Backend" },
+      { "id": "rust", "name": "Rust", "aliases": ["rust-lang"], "domain": "Systems / Performance" },
+      { "id": "sql", "name": "SQL", "aliases": ["structured query language", "ansi sql"], "domain": "Database / Analytics" },
+      { "id": "ruby", "name": "Ruby", "aliases": [], "domain": "Backend / Web" },
+      { "id": "php", "name": "PHP", "aliases": ["php7", "php8"], "domain": "Backend / Web" },
+      { "id": "html", "name": "HTML", "aliases": ["html5"], "domain": "Frontend" },
+      { "id": "css", "name": "CSS", "aliases": ["css3"], "domain": "Frontend" },
+      { "id": "kotlin", "name": "Kotlin", "aliases": [], "domain": "Mobile / Android / Backend" },
+      { "id": "swift", "name": "Swift", "aliases": [], "domain": "Mobile / iOS" }
+    ],
+    "frameworks": [
+      { "id": "react", "name": "React", "aliases": ["react.js", "reactjs"], "domain": "Frontend", "related_languages": ["javascript", "typescript"] },
+      { "id": "nextjs", "name": "Next.js", "aliases": ["next.js", "nextjs"], "domain": "Frontend / Full-Stack", "parent": "react" },
+      { "id": "vue", "name": "Vue.js", "aliases": ["vue", "vuejs", "vue3"], "domain": "Frontend" },
+      { "id": "angular", "name": "Angular", "aliases": ["angularjs", "angular 2+"], "domain": "Frontend" },
+      { "id": "nodejs", "name": "Node.js", "aliases": ["node", "nodejs"], "domain": "Backend", "related_languages": ["javascript", "typescript"] },
+      { "id": "express", "name": "Express", "aliases": ["express.js", "expressjs"], "domain": "Backend", "parent": "nodejs" },
+      { "id": "fastapi", "name": "FastAPI", "aliases": ["fast-api"], "domain": "Backend", "related_languages": ["python"] },
+      { "id": "django", "name": "Django", "aliases": ["django rest framework", "drf"], "domain": "Backend", "related_languages": ["python"] },
+      { "id": "flask", "name": "Flask", "aliases": [], "domain": "Backend", "related_languages": ["python"] },
+      { "id": "springboot", "name": "Spring Boot", "aliases": ["spring", "spring framework"], "domain": "Backend", "related_languages": ["java"] },
+      { "id": "tailwindcss", "name": "Tailwind CSS", "aliases": ["tailwind", "tailwindcss"], "domain": "Frontend" },
+      { "id": "redux", "name": "Redux", "aliases": ["redux toolkit", "rtk"], "domain": "Frontend", "parent": "react" }
+    ],
+    "cloud_devops": [
+      { "id": "aws", "name": "AWS", "aliases": ["amazon web services", "ec2", "s3", "lambda", "ecs", "eks"], "domain": "Cloud" },
+      { "id": "docker", "name": "Docker", "aliases": ["dockerfile", "docker-compose", "containerization"], "domain": "DevOps" },
+      { "id": "kubernetes", "name": "Kubernetes", "aliases": ["k8s", "helm"], "domain": "DevOps / Orchestration" },
+      { "id": "terraform", "name": "Terraform", "aliases": ["iac", "infrastructure as code"], "domain": "DevOps / Cloud" },
+      { "id": "cicd", "name": "CI/CD", "aliases": ["continuous integration", "continuous deployment", "github actions", "gitlab ci", "jenkins"], "domain": "DevOps" },
+      { "id": "azure", "name": "Azure", "aliases": ["microsoft azure"], "domain": "Cloud" },
+      { "id": "gcp", "name": "GCP", "aliases": ["google cloud", "google cloud platform"], "domain": "Cloud" },
+      { "id": "linux", "name": "Linux", "aliases": ["ubuntu", "debian", "centos", "bash", "shell scripting"], "domain": "Systems / OS" }
+    ],
+    "databases": [
+      { "id": "postgresql", "name": "PostgreSQL", "aliases": ["postgres", "pgsql"], "domain": "Relational DB" },
+      { "id": "mysql", "name": "MySQL", "aliases": ["mariadb"], "domain": "Relational DB" },
+      { "id": "mongodb", "name": "MongoDB", "aliases": ["mongo", "mongoose"], "domain": "NoSQL DB" },
+      { "id": "redis", "name": "Redis", "aliases": ["in-memory caching", "redis cache"], "domain": "Caching / Key-Value" },
+      { "id": "elasticsearch", "name": "Elasticsearch", "aliases": ["elk", "elastic search", "opensearch"], "domain": "Search / Analytics" },
+      { "id": "sqlite", "name": "SQLite", "aliases": ["sqlite3"], "domain": "Embedded DB" },
+      { "id": "pinecone", "name": "Pinecone", "aliases": ["vector database", "chromadb", "weaviate"], "domain": "Vector DB" }
+    ],
+    "ai_data": [
+      { "id": "machine_learning", "name": "Machine Learning", "aliases": ["ml", "supervised learning", "unsupervised learning"], "domain": "AI / ML" },
+      { "id": "deep_learning", "name": "Deep Learning", "aliases": ["neural networks", "dl", "cnn", "rnn", "transformers"], "domain": "AI / ML" },
+      { "id": "nlp", "name": "NLP", "aliases": ["natural language processing", "text analytics"], "domain": "AI / NLP" },
+      { "id": "llm", "name": "LLMs", "aliases": ["large language models", "generative ai", "genai", "prompt engineering", "openai api"], "domain": "AI / GenAI" },
+      { "id": "langchain", "name": "LangChain", "aliases": ["llamaindex", "rag", "retrieval augmented generation"], "domain": "AI / GenAI" },
+      { "id": "pytorch", "name": "PyTorch", "aliases": ["torch"], "domain": "AI / Frameworks" },
+      { "id": "tensorflow", "name": "TensorFlow", "aliases": ["keras", "tf"], "domain": "AI / Frameworks" },
+      { "id": "scikit_learn", "name": "Scikit-Learn", "aliases": ["sklearn"], "domain": "Data Science" },
+      { "id": "pandas", "name": "Pandas", "aliases": [], "domain": "Data Science" },
+      { "id": "numpy", "name": "NumPy", "aliases": [], "domain": "Data Science" },
+      { "id": "tableau", "name": "Tableau", "aliases": ["power bi", "powerbi", "data visualization", "looker"], "domain": "Data Analytics" }
+    ],
+    "practices": [
+      { "id": "rest_api", "name": "REST APIs", "aliases": ["restful api", "rest api", "restful web services", "api development"], "domain": "Architecture" },
+      { "id": "microservices", "name": "Microservices", "aliases": ["microservice architecture", "distributed systems"], "domain": "Architecture" },
+      { "id": "graphql", "name": "GraphQL", "aliases": ["apollo graphql"], "domain": "API Architecture" },
+      { "id": "system_design", "name": "System Design", "aliases": ["high level design", "low level design", "architecture"], "domain": "Engineering" },
+      { "id": "git", "name": "Git", "aliases": ["github", "gitlab", "version control"], "domain": "Development" },
+      { "id": "agile", "name": "Agile", "aliases": ["scrum", "kanban", "sprints"], "domain": "Methodology" },
+      { "id": "tdd", "name": "TDD", "aliases": ["test driven development", "unit testing", "pytest", "jest"], "domain": "Testing" }
+    ]
+  },
+  "taxonomy_relationships": {
+    "react": ["javascript", "typescript", "frontend", "html", "css"],
+    "nextjs": ["react", "javascript", "typescript", "frontend"],
+    "nodejs": ["javascript", "typescript", "backend", "rest_api"],
+    "fastapi": ["python", "backend", "rest_api"],
+    "django": ["python", "backend", "sql", "rest_api"],
+    "springboot": ["java", "backend", "rest_api", "microservices"],
+    "docker": ["devops", "cloud_devops", "linux", "kubernetes"],
+    "kubernetes": ["docker", "cloud_devops", "aws"],
+    "aws": ["cloud_devops", "docker", "terraform"],
+    "langchain": ["llm", "python", "nlp", "pinecone"]
+  }
+}

@@ -1,0 +1,83 @@
+[
+  {
+    "id": "job-backend-001",
+    "title": "Junior Backend Developer",
+    "department": "Engineering",
+    "location": "Remote / San Francisco, CA",
+    "experience_level": "Entry to Mid (1-3 years)",
+    "description": "We are looking for a Junior Backend Developer to design, build, and maintain robust server-side applications and RESTful APIs. You will collaborate with cross-functional teams to deliver scalable backend services, optimize database queries, and integrate cloud services.",
+    "requirements": [
+      { "name": "Python", "importance": "critical", "category": "languages" },
+      { "name": "REST APIs", "importance": "critical", "category": "practices" },
+      { "name": "SQL", "importance": "critical", "category": "databases" },
+      { "name": "Node.js", "importance": "recommended", "category": "frameworks" },
+      { "name": "MongoDB", "importance": "recommended", "category": "databases" },
+      { "name": "Git", "importance": "recommended", "category": "practices" },
+      { "name": "Docker", "importance": "critical", "category": "cloud_devops" },
+      { "name": "AWS", "importance": "recommended", "category": "cloud_devops" },
+      { "name": "Redis", "importance": "optional", "category": "databases" },
+      { "name": "Microservices", "importance": "recommended", "category": "practices" }
+    ],
+    "education_requirement": "Bachelor's degree in Computer Science, IT, or related technical field",
+    "responsibilities": [
+      "Develop high-performance REST APIs and backend microservices.",
+      "Design and manage PostgreSQL and MongoDB database schemas.",
+      "Deploy and maintain containerized applications using Docker and AWS.",
+      "Collaborate with frontend engineers to integrate user-facing elements."
+    ]
+  },
+  {
+    "id": "job-frontend-002",
+    "title": "Frontend Developer",
+    "department": "UI/UX Engineering",
+    "location": "Hybrid / New York, NY",
+    "experience_level": "Mid-Level (2-4 years)",
+    "description": "Seeking a talented Frontend Developer passionate about building fast, accessible, and delightful web applications. You will work with React, TypeScript, and modern state management to build responsive client-side interfaces.",
+    "requirements": [
+      { "name": "React", "importance": "critical", "category": "frameworks" },
+      { "name": "JavaScript", "importance": "critical", "category": "languages" },
+      { "name": "TypeScript", "importance": "critical", "category": "languages" },
+      { "name": "HTML", "importance": "critical", "category": "languages" },
+      { "name": "CSS", "importance": "critical", "category": "languages" },
+      { "name": "Tailwind CSS", "importance": "recommended", "category": "frameworks" },
+      { "name": "Redux", "importance": "recommended", "category": "frameworks" },
+      { "name": "REST APIs", "importance": "recommended", "category": "practices" },
+      { "name": "Next.js", "importance": "recommended", "category": "frameworks" },
+      { "name": "Git", "importance": "recommended", "category": "practices" }
+    ],
+    "education_requirement": "Bachelor's degree in Computer Science or equivalent practical experience",
+    "responsibilities": [
+      "Translate Figma designs and wireframes into clean, reusable React components.",
+      "Optimize web applications for maximum speed, responsiveness, and cross-browser fidelity.",
+      "Integrate frontend state with RESTful APIs and WebSocket endpoints.",
+      "Maintain unit and component tests with Jest and React Testing Library."
+    ]
+  },
+  {
+    "id": "job-data-003",
+    "title": "Data Analyst",
+    "department": "Business Intelligence & Analytics",
+    "location": "San Francisco, CA / Remote",
+    "experience_level": "Entry-Level (1-2 years)",
+    "description": "We are seeking a detail-oriented Data Analyst to uncover actionable insights from large datasets, build executive dashboards, and drive business decision-making through statistical modeling and automated data pipelines.",
+    "requirements": [
+      { "name": "SQL", "importance": "critical", "category": "databases" },
+      { "name": "Python", "importance": "critical", "category": "languages" },
+      { "name": "Pandas", "importance": "critical", "category": "ai_data" },
+      { "name": "NumPy", "importance": "recommended", "category": "ai_data" },
+      { "name": "Tableau", "importance": "critical", "category": "ai_data" },
+      { "name": "Machine Learning", "importance": "recommended", "category": "ai_data" },
+      { "name": "Scikit-Learn", "importance": "recommended", "category": "ai_data" },
+      { "name": "PostgreSQL", "importance": "recommended", "category": "databases" },
+      { "name": "Data Visualization", "importance": "recommended", "category": "ai_data" },
+      { "name": "Git", "importance": "optional", "category": "practices" }
+    ],
+    "education_requirement": "Bachelor's degree in Statistics, Mathematics, Information Systems, or Data Science",
+    "responsibilities": [
+      "Write complex SQL queries and Python ETL scripts to extract and transform large business datasets.",
+      "Build interactive Tableau and PowerBI dashboards for stakeholder reporting.",
+      "Perform statistical analysis and exploratory data modeling to detect trends.",
+      "Present analytical findings and recommendations to cross-functional leadership."
+    ]
+  }
+]
