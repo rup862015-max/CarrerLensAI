@@ -61,43 +61,20 @@ class ResumeAnalyzer:
         self.action_verbs = set(ACTION_VERBS)
 
     def extract_sections(self, text: str) -> Dict[str, str]:
-        """Extracts standard resume sections based on section heading patterns."""
-        sections = {
-            "summary": "",
-            "experience": "",
-            "skills": "",
-            "education": "",
-            "projects": "",
-            "certifications": ""
-        }
-        
-        section_patterns = {
-            "summary": r"(?:professional\s+summary|summary|profile|about\s+me)\b",
-            "experience": r"(?:work\s+experience|professional\s+experience|experience|employment\s+history)\b",
-            "skills": r"(?:technical\s+skills|skills|technologies|core\s+competencies)\b",
-            "education": r"(?:education|academic\s+background|degrees)\b",
-            "projects": r"(?:projects|key\s+projects|personal\s+projects)\b",
-            "certifications": r"(?:certifications|certificates|licenses)\b"
-        }
-
-        # Find match indices
-        matches = []
-        for sec_name, pattern in section_patterns.items():
-            for m in re.finditer(pattern, text, flags=re.IGNORECASE):
-                matches.append((m.start(), sec_name))
-
-        matches.sort(key=lambda x: x[0])
-
-        if not matches:
-            sections["summary"] = text[:300]
-            sections["experience"] = text[300:]
-            return sections
-
-        for i, (start_idx, sec_name) in enumerate(matches):
-            end_idx = matches[i + 1][0] if i + 1 < len(matches) else len(text)
-            sections[sec_name] = text[start_idx:end_idx].strip()
-
-        return sections
+        """Extracts standard resume sections using robust line-by-line heading detection."""
+        try:
+            from services.resume_parser import extract_sections as parser_extract_sections
+            return parser_extract_sections(text)
+        except ImportError:
+            # Fallback if standalone
+            return {
+                "summary": text[:300].strip(),
+                "experience": text[300:].strip(),
+                "skills": "",
+                "education": "",
+                "projects": "",
+                "certifications": ""
+            }
 
     def calculate_ats_formatting_score(self, text: str, sections: Dict[str, str]) -> Dict[str, Any]:
         """Evaluates parseability, section coverage, contact details, and layout structure."""

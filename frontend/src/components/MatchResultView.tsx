@@ -169,10 +169,43 @@ export const MatchResultView: React.FC<MatchResultViewProps> = ({
               </div>
 
               {/* Match Details Tag */}
-              <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs text-slate-400">
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/80 text-xs text-slate-400">
                 <span>Evidence Type: <strong className="text-slate-200 capitalize">{selectedRequirement.match_type.replace('_', ' ')}</strong></span>
                 <span>Requirement Weight: <strong className="text-slate-200 capitalize">{selectedRequirement.importance}</strong></span>
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                  selectedRequirement.status === 'matched'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                    : selectedRequirement.status === 'partial'
+                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+                    : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                }`}>
+                  Status: {selectedRequirement.status}
+                </span>
               </div>
+
+              {/* Scoring Contribution */}
+              {selectedRequirement.scoring_contribution && (
+                <div className="space-y-1 pt-2 border-t border-slate-800">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+                    Configured Scoring Contribution:
+                  </span>
+                  <p className="text-xs text-indigo-300 font-mono bg-indigo-950/30 p-2.5 rounded-xl border border-indigo-500/20">
+                    {selectedRequirement.scoring_contribution}
+                  </p>
+                </div>
+              )}
+
+              {/* Uncertainty Assessment */}
+              {selectedRequirement.uncertainty_note && (
+                <div className="space-y-1 pt-2 border-t border-slate-800">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+                    Evidence Boundary & Uncertainty:
+                  </span>
+                  <p className="text-xs text-slate-400 italic">
+                    {selectedRequirement.uncertainty_note}
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <div className="p-8 rounded-3xl bg-slate-900/40 border border-dashed border-slate-800 text-center text-xs text-slate-500">

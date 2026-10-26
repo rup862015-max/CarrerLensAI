@@ -28,6 +28,8 @@ class TestCareerLensPhase1(unittest.TestCase):
     def setUpClass(cls):
         init_db()
         cls.client = TestClient(app)
+        from services.auth_service import get_test_token
+        cls.client.headers["Authorization"] = f"Bearer {get_test_token('demo_user', 'candidate@careerlens.ai')}"
 
     def test_01_clean_text_and_sections(self):
         sample = "John Doe\n\nPROFESSIONAL SUMMARY\nExperienced developer\n\nTECHNICAL SKILLS\nPython, SQL, React"

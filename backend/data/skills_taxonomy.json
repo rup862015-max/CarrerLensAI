@@ -9,13 +9,14 @@
       { "id": "csharp", "name": "C#", "aliases": ["c-sharp", ".net"], "domain": "Enterprise / Backend" },
       { "id": "go", "name": "Go", "aliases": ["golang"], "domain": "Cloud / Systems / Backend" },
       { "id": "rust", "name": "Rust", "aliases": ["rust-lang"], "domain": "Systems / Performance" },
-      { "id": "sql", "name": "SQL", "aliases": ["structured query language", "ansi sql"], "domain": "Database / Analytics" },
+      { "id": "sql", "name": "SQL", "aliases": ["structured query language", "ansi sql", "tsql", "plsql"], "domain": "Database / Analytics" },
       { "id": "ruby", "name": "Ruby", "aliases": [], "domain": "Backend / Web" },
       { "id": "php", "name": "PHP", "aliases": ["php7", "php8"], "domain": "Backend / Web" },
       { "id": "html", "name": "HTML", "aliases": ["html5"], "domain": "Frontend" },
       { "id": "css", "name": "CSS", "aliases": ["css3"], "domain": "Frontend" },
       { "id": "kotlin", "name": "Kotlin", "aliases": [], "domain": "Mobile / Android / Backend" },
-      { "id": "swift", "name": "Swift", "aliases": [], "domain": "Mobile / iOS" }
+      { "id": "swift", "name": "Swift", "aliases": [], "domain": "Mobile / iOS" },
+      { "id": "r_lang", "name": "R", "aliases": ["r programming", "r-lang"], "domain": "Data / Statistics" }
     ],
     "frameworks": [
       { "id": "react", "name": "React", "aliases": ["react.js", "reactjs"], "domain": "Frontend", "related_languages": ["javascript", "typescript"] },
@@ -48,6 +49,7 @@
       { "id": "redis", "name": "Redis", "aliases": ["in-memory caching", "redis cache"], "domain": "Caching / Key-Value" },
       { "id": "elasticsearch", "name": "Elasticsearch", "aliases": ["elk", "elastic search", "opensearch"], "domain": "Search / Analytics" },
       { "id": "sqlite", "name": "SQLite", "aliases": ["sqlite3"], "domain": "Embedded DB" },
+      { "id": "snowflake", "name": "Snowflake", "aliases": ["snowflake db", "data warehouse"], "domain": "Cloud Data Warehouse" },
       { "id": "pinecone", "name": "Pinecone", "aliases": ["vector database", "chromadb", "weaviate"], "domain": "Vector DB" }
     ],
     "ai_data": [
@@ -61,7 +63,44 @@
       { "id": "scikit_learn", "name": "Scikit-Learn", "aliases": ["sklearn"], "domain": "Data Science" },
       { "id": "pandas", "name": "Pandas", "aliases": [], "domain": "Data Science" },
       { "id": "numpy", "name": "NumPy", "aliases": [], "domain": "Data Science" },
-      { "id": "tableau", "name": "Tableau", "aliases": ["power bi", "powerbi", "data visualization", "looker"], "domain": "Data Analytics" }
+      { "id": "tableau", "name": "Tableau", "aliases": ["tableau desktop", "tableau server"], "domain": "Data Analytics" },
+      { "id": "power_bi", "name": "Power BI", "aliases": ["powerbi", "power-bi", "dax"], "domain": "Business Intelligence" },
+      { "id": "excel", "name": "Excel", "aliases": ["ms excel", "microsoft excel", "vlookup", "pivot tables", "spreadsheet modeling"], "domain": "Analytics / Business" },
+      { "id": "data_visualization", "name": "Data Visualization", "aliases": ["data viz", "dashboard design", "reporting"], "domain": "Data Analytics" }
+    ],
+    "finance_business": [
+      { "id": "financial_modeling", "name": "Financial Modeling", "aliases": ["financial models", "dcf", "lbo", "discounted cash flow"], "domain": "Finance" },
+      { "id": "fpa", "name": "FP&A", "aliases": ["financial planning & analysis", "financial planning and analysis", "financial planning"], "domain": "Corporate Finance" },
+      { "id": "budgeting", "name": "Budgeting", "aliases": ["annual budgeting", "operating budget", "capex", "opex"], "domain": "Corporate Finance" },
+      { "id": "forecasting", "name": "Forecasting", "aliases": ["financial forecasting", "cash flow forecasting", "revenue projections"], "domain": "Corporate Finance" },
+      { "id": "variance_analysis", "name": "Variance Analysis", "aliases": ["budget vs actual", "budget-to-actual", "variance reporting"], "domain": "Finance" },
+      { "id": "accounting", "name": "Accounting", "aliases": ["general ledger", "financial accounting", "gaap", "ifrs", "reconciliation"], "domain": "Finance / Accounting" },
+      { "id": "auditing", "name": "Auditing", "aliases": ["internal audit", "financial audit", "audit trail", "compliance"], "domain": "Finance / Audit" },
+      { "id": "financial_reporting", "name": "Financial Reporting", "aliases": ["management reporting", "board reporting", "financial statements", "p&l"], "domain": "Corporate Finance" },
+      { "id": "valuation", "name": "Valuation", "aliases": ["company valuation", "equity valuation", "comparable analysis"], "domain": "Corporate Finance" },
+      { "id": "sap", "name": "SAP", "aliases": ["sap erp", "sap fico"], "domain": "Enterprise ERP" },
+      { "id": "quickbooks", "name": "QuickBooks", "aliases": ["quickbooks online"], "domain": "Accounting Software" }
+    ],
+    "product_management": [
+      { "id": "product_management", "name": "Product Management", "aliases": ["product strategy", "product lifecycle", "product roadmaps"], "domain": "Product" },
+      { "id": "roadmapping", "name": "Roadmapping", "aliases": ["product roadmap", "strategic roadmapping"], "domain": "Product" },
+      { "id": "user_stories", "name": "User Stories", "aliases": ["user story mapping", "product backlog", "backlog grooming"], "domain": "Product" },
+      { "id": "jira", "name": "Jira", "aliases": ["atlassian jira", "confluence"], "domain": "Product / Agile" },
+      { "id": "ab_testing", "name": "A/B Testing", "aliases": ["experimentation", "split testing"], "domain": "Product Growth" },
+      { "id": "stakeholder_management", "name": "Stakeholder Management", "aliases": ["cross-functional leadership", "executive communication"], "domain": "Management" }
+    ],
+    "marketing": [
+      { "id": "seo", "name": "SEO", "aliases": ["search engine optimization", "organic search"], "domain": "Growth Marketing" },
+      { "id": "sem", "name": "SEM", "aliases": ["google ads", "ppc", "paid search"], "domain": "Performance Marketing" },
+      { "id": "google_analytics", "name": "Google Analytics", "aliases": ["ga4", "web analytics"], "domain": "Marketing Analytics" },
+      { "id": "content_strategy", "name": "Content Strategy", "aliases": ["content marketing", "copywriting"], "domain": "Marketing" },
+      { "id": "crm", "name": "CRM", "aliases": ["hubspot", "salesforce", "customer relationship management"], "domain": "Sales / Marketing" }
+    ],
+    "design": [
+      { "id": "ui_ux_design", "name": "UI/UX Design", "aliases": ["ui design", "ux design", "product design"], "domain": "Design" },
+      { "id": "figma", "name": "Figma", "aliases": ["figma design", "wireframes"], "domain": "Design" },
+      { "id": "user_research", "name": "User Research", "aliases": ["usability testing", "user interviews"], "domain": "Design" },
+      { "id": "design_systems", "name": "Design Systems", "aliases": ["component library design", "atomic design"], "domain": "Design" }
     ],
     "practices": [
       { "id": "rest_api", "name": "REST APIs", "aliases": ["restful api", "rest api", "restful web services", "api development"], "domain": "Architecture" },
@@ -83,6 +122,12 @@
     "docker": ["devops", "cloud_devops", "linux", "kubernetes"],
     "kubernetes": ["docker", "cloud_devops", "aws"],
     "aws": ["cloud_devops", "docker", "terraform"],
-    "langchain": ["llm", "python", "nlp", "pinecone"]
+    "langchain": ["llm", "python", "nlp", "pinecone"],
+    "fpa": ["financial_modeling", "budgeting", "forecasting", "variance_analysis", "excel", "power_bi"],
+    "financial_modeling": ["excel", "fpa", "valuation", "forecasting", "variance_analysis"],
+    "power_bi": ["sql", "excel", "tableau", "data_visualization", "fpa"],
+    "product_management": ["roadmapping", "user_stories", "jira", "agile", "stakeholder_management"],
+    "seo": ["sem", "google_analytics", "content_strategy"],
+    "ui_ux_design": ["figma", "user_research", "design_systems"]
   }
 }

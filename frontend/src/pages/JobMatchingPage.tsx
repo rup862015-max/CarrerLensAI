@@ -6,21 +6,23 @@ import {
   AlertCircle, 
   CheckCircle2 
 } from 'lucide-react';
-import { DemoJob, MatchResponse, ResumeAnalysisResponse } from '../types';
+import { DemoJob, MatchResponse, ResumeAnalysisResponse, TabType } from '../types';
 import { apiService } from '../services/api';
 import { MatchResultView } from '../components/MatchResultView';
 
 interface JobMatchingPageProps {
   currentAnalysis: ResumeAnalysisResponse | null;
   onOpenPhase2: (title: string, desc: string, items: string[]) => void;
+  onNavigate?: (tab: TabType) => void;
 }
 
 export const JobMatchingPage: React.FC<JobMatchingPageProps> = ({
   currentAnalysis,
   onOpenPhase2,
+  onNavigate,
 }) => {
   const [demoJobs, setDemoJobs] = useState<DemoJob[]>([]);
-  const [selectedJobId, setSelectedJobId] = useState<string>('job-backend-001');
+  const [selectedJobId, setSelectedJobId] = useState<string>('');
   const [customJobTitle, setCustomJobTitle] = useState<string>('');
   const [customJobText, setCustomJobText] = useState<string>('');
   const [matchingMode, setMatchingMode] = useState<'demo' | 'custom'>('demo');
@@ -29,83 +31,49 @@ export const JobMatchingPage: React.FC<JobMatchingPageProps> = ({
   const [matchResult, setMatchResult] = useState<MatchResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Load demo jobs on mount
+  // Fetch tailored demo roles generated on basis of active resume
   useEffect(() => {
     const fetchDemoJobs = async () => {
       try {
-        const jobs = await apiService.getDemoJobs();
+        const jobs = await apiService.getDemoJobs(currentAnalysis?.resume_id);
         setDemoJobs(jobs);
-      } catch {
-        // Fallback default demo jobs
-        setDemoJobs([
-          {
-            id: 'job-backend-001',
-            title: 'Junior Backend Developer',
-            department: 'Engineering',
-            location: 'Remote / San Francisco, CA',
-            experience_level: 'Entry to Mid',
-            description: 'Design and build scalable server-side REST APIs with Python, SQL, and Docker.',
-            requirements: [
-              { name: 'Python', importance: 'critical', category: 'languages' },
-              { name: 'REST APIs', importance: 'critical', category: 'practices' },
-              { name: 'SQL', importance: 'critical', category: 'databases' },
-              { name: 'Docker', importance: 'critical', category: 'cloud_devops' },
-            ],
-            education_requirement: "Bachelor's degree in CS/IT",
-            responsibilities: ['Develop REST APIs', 'Manage databases'],
-          },
-          {
-            id: 'job-frontend-002',
-            title: 'Frontend Developer',
-            department: 'UI/UX Engineering',
-            location: 'Hybrid / New York, NY',
-            experience_level: 'Mid-Level',
-            description: 'Build fast, accessible React and TypeScript client applications.',
-            requirements: [
-              { name: 'React', importance: 'critical', category: 'frameworks' },
-              { name: 'TypeScript', importance: 'critical', category: 'languages' },
-              { name: 'Tailwind CSS', importance: 'recommended', category: 'frameworks' },
-            ],
-            education_requirement: "Bachelor's degree in CS",
-            responsibilities: ['Build UI components', 'Integrate APIs'],
-          },
-          {
-            id: 'job-data-003',
-            title: 'Data Analyst',
-            department: 'BI & Analytics',
-            location: 'San Francisco, CA',
-            experience_level: 'Entry-Level',
-            description: 'Extract business insights using SQL, Python, Pandas, and Tableau.',
-            requirements: [
-              { name: 'SQL', importance: 'critical', category: 'databases' },
-              { name: 'Python', importance: 'critical', category: 'languages' },
-              { name: 'Tableau', importance: 'critical', category: 'ai_data' },
-              { name: 'Pandas', importance: 'critical', category: 'ai_data' },
-            ],
-            education_requirement: "Bachelor's degree in Statistics/Data Science",
-            responsibilities: ['SQL ETL pipelines', 'Tableau dashboards'],
-          },
-        ]);
+        if (jobs.length > 0) {
+          setSelectedJobId(prev => (jobs.some(j => j.id === prev) ? prev : jobs[0].id));
+        } else {
+          setSelectedJobId('');
+        }
+      } catch (err) {
+        console.error('Failed to load tailored demo jobs:', err);
+        setDemoJobs([]);
       }
     };
     fetchDemoJobs();
-  }, []);
+  }, [currentAnalysis?.resume_id]);
 
   const handleRunMatch = async (jobIdToUse?: string) => {
+    if (!currentAnalysis) {
+      setErrorMessage('No resume analyzed yet. Please upload or analyze your resume before running job matching.');
+      return;
+    }
+
     setIsMatching(true);
     setErrorMessage(null);
 
     try {
-      let params: any = {};
-
-      if (currentAnalysis) {
-        params.resume_id = currentAnalysis.resume_id;
-        params.resume_profile = currentAnalysis.extracted_profile;
-        params.resume_text = currentAnalysis.raw_text;
-      }
+      const params: any = {
+        resume_id: currentAnalysis.resume_id,
+        resume_profile: currentAnalysis.extracted_profile,
+        resume_text: currentAnalysis.raw_text,
+      };
 
       if (matchingMode === 'demo') {
-        params.job_id = jobIdToUse || selectedJobId;
+        const targetId = jobIdToUse || selectedJobId || (demoJobs[0] ? demoJobs[0].id : undefined);
+        if (!targetId) {
+          setErrorMessage('Please select a target role or paste a custom job description.');
+          setIsMatching(false);
+          return;
+        }
+        params.job_id = targetId;
       } else {
         if (!customJobText.trim()) {
           setErrorMessage('Please paste a job description text to run matching.');
@@ -125,12 +93,12 @@ export const JobMatchingPage: React.FC<JobMatchingPageProps> = ({
     }
   };
 
-  // Run initial match on page load if demo jobs available
+  // Run initial match on page load ONLY if tailored demo jobs and genuine analyzed resume are available
   useEffect(() => {
-    if (demoJobs.length > 0 && !matchResult) {
-      handleRunMatch('job-backend-001');
+    if (demoJobs.length > 0 && currentAnalysis && !matchResult) {
+      handleRunMatch(demoJobs[0].id);
     }
-  }, [demoJobs]);
+  }, [demoJobs, currentAnalysis]);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
@@ -147,6 +115,31 @@ export const JobMatchingPage: React.FC<JobMatchingPageProps> = ({
           Evaluate multi-layer alignment between your verified profile and target technical requirements.
         </p>
       </div>
+
+      {/* Extraction Warning Banner if resume had extraction issues */}
+      {currentAnalysis && currentAnalysis.warnings && currentAnalysis.warnings.length > 0 && (
+        <div className={`p-4 rounded-2xl border flex items-start space-x-3 text-xs ${
+          currentAnalysis.extraction_status === 'partial'
+            ? 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+            : 'bg-amber-500/10 border-amber-500/30 text-amber-200'
+        }`}>
+          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+          <div className="space-y-0.5">
+            <span className="font-bold text-white block">Ingestion Integrity Notice</span>
+            <span>Some sections in this resume may not have been fully extracted. Matching evaluates verified source evidence.</span>
+          </div>
+        </div>
+      )}
+
+      {/* No Resume Notice */}
+      {!currentAnalysis && (
+        <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-between text-xs text-indigo-300">
+          <div className="flex items-center space-x-3">
+            <AlertCircle className="w-4 h-4 shrink-0 text-indigo-400" />
+            <span>No active resume loaded. Please upload or analyze your resume in the Resume Analysis tab before matching against roles.</span>
+          </div>
+        </div>
+      )}
 
       {/* Mode Switcher & Job Selector */}
       <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800 space-y-6">
@@ -167,7 +160,7 @@ export const JobMatchingPage: React.FC<JobMatchingPageProps> = ({
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              Pre-configured Demo Roles
+              Roles Generated for Your Resume
             </button>
             <button
               type="button"
@@ -184,65 +177,84 @@ export const JobMatchingPage: React.FC<JobMatchingPageProps> = ({
         </div>
 
         {matchingMode === 'demo' ? (
-          /* Option 2: 3 Demo Job Cards */
+          /* Option: Tailored Demo Roles */
           <div className="space-y-4">
             <span className="text-xs font-semibold text-slate-300">
-              Select one of the benchmark roles to compare alignment:
+              Select one of the tailored benchmark roles generated on the basis of your resume:
             </span>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {demoJobs.map((job) => {
-                const isSelected = selectedJobId === job.id;
-                return (
-                  <div
-                    key={job.id}
-                    onClick={() => {
-                      setSelectedJobId(job.id);
-                      handleRunMatch(job.id);
-                    }}
-                    className={`p-5 rounded-2xl border cursor-pointer transition-all space-y-3 relative group ${
-                      isSelected
-                        ? 'bg-indigo-600/15 border-indigo-500 shadow-lg shadow-indigo-500/10'
-                        : 'bg-slate-800/40 border-slate-700/60 hover:border-slate-600'
-                    }`}
+
+            {demoJobs.length === 0 ? (
+              <div className="p-8 text-center rounded-2xl bg-slate-950/40 border border-dashed border-slate-800 space-y-3">
+                <Sparkles className="w-8 h-8 text-indigo-400 mx-auto" />
+                <h4 className="text-sm font-semibold text-white">No Resume Provided Yet</h4>
+                <p className="text-xs text-slate-400 max-w-md mx-auto">
+                  Upload or analyze your resume in the Resume Analysis tab. We will dynamically generate tailored demo roles specifically suited to your background, skills, and experience level.
+                </p>
+                {onNavigate && (
+                  <button
+                    onClick={() => onNavigate('resume-analysis')}
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold transition-colors"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] uppercase font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded">
-                        {job.department}
-                      </span>
-                      {isSelected && (
-                        <span className="flex items-center space-x-1 text-indigo-400 text-xs font-bold">
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>Active Target</span>
+                    Go to Resume Analysis
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {demoJobs.map((job) => {
+                  const isSelected = selectedJobId === job.id;
+                  return (
+                    <div
+                      key={job.id}
+                      onClick={() => {
+                        setSelectedJobId(job.id);
+                        handleRunMatch(job.id);
+                      }}
+                      className={`p-5 rounded-2xl border cursor-pointer transition-all space-y-3 relative group ${
+                        isSelected
+                          ? 'bg-indigo-600/15 border-indigo-500 shadow-lg shadow-indigo-500/10'
+                          : 'bg-slate-800/40 border-slate-700/60 hover:border-slate-600'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] uppercase font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded">
+                          {job.department}
                         </span>
-                      )}
-                    </div>
+                        {isSelected && (
+                          <span className="flex items-center space-x-1 text-indigo-400 text-xs font-bold">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>Active Target</span>
+                          </span>
+                        )}
+                      </div>
 
-                    <div>
-                      <h4 className="font-bold text-sm text-white group-hover:text-indigo-300 transition-colors">
-                        {job.title}
-                      </h4>
-                      <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">{job.description}</p>
-                    </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-white group-hover:text-indigo-300 transition-colors">
+                          {job.title}
+                        </h4>
+                        <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">{job.description}</p>
+                      </div>
 
-                    <div className="pt-2 border-t border-slate-700/40 flex flex-wrap gap-1">
-                      {job.requirements.slice(0, 3).map((r, rIdx) => (
-                        <span
-                          key={rIdx}
-                          className="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700"
-                        >
-                          {r.name}
-                        </span>
-                      ))}
-                      {job.requirements.length > 3 && (
-                        <span className="px-1.5 py-0.5 text-[10px] text-slate-400">
-                          +{job.requirements.length - 3} more
-                        </span>
-                      )}
+                      <div className="pt-2 border-t border-slate-700/40 flex flex-wrap gap-1">
+                        {job.requirements.slice(0, 3).map((r, rIdx) => (
+                          <span
+                            key={rIdx}
+                            className="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700"
+                          >
+                            {r.name}
+                          </span>
+                        ))}
+                        {job.requirements.length > 3 && (
+                          <span className="px-1.5 py-0.5 text-[10px] text-slate-400">
+                            +{job.requirements.length - 3} more
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         ) : (
           /* Option 1: Large Textarea for Custom Job Description */
@@ -322,11 +334,17 @@ export const JobMatchingPage: React.FC<JobMatchingPageProps> = ({
       {!isMatching && matchResult && (
         <MatchResultView
           matchResult={matchResult}
-          onExploreSimulation={() => onOpenPhase2(
-            'Career Simulator',
-            'Simulate adding new technical competencies to forecast job match improvements.',
-            ['Dynamic skill impact simulation', 'Transition trajectory mapping', 'Projected readiness score']
-          )}
+          onExploreSimulation={() => {
+            if (onNavigate) {
+              onNavigate('career-simulator');
+            } else {
+              onOpenPhase2(
+                'Career Simulator',
+                'Simulate adding new technical competencies to forecast job match improvements.',
+                ['Dynamic skill impact simulation', 'Transition trajectory mapping', 'Projected readiness score']
+              );
+            }
+          }}
         />
       )}
     </div>

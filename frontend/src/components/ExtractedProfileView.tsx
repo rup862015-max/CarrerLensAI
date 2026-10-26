@@ -1,5 +1,5 @@
 import React from 'react';
-import { GraduationCap, Briefcase, Code2, FolderGit2, CheckCircle2 } from 'lucide-react';
+import { GraduationCap, Briefcase, Code2, FolderGit2, CheckCircle2, Bookmark } from 'lucide-react';
 import { ExtractedProfile } from '../types';
 
 interface ExtractedProfileViewProps {
@@ -52,7 +52,7 @@ export const ExtractedProfileView: React.FC<ExtractedProfileViewProps> = ({ prof
               <span>Experience Timeline</span>
             </div>
             <span className="text-[11px] font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded-full">
-              ~{profile.years_of_experience || 2} Years
+              ~{profile.years_of_experience ?? 0} Years
             </span>
           </div>
 
@@ -181,6 +181,30 @@ export const ExtractedProfileView: React.FC<ExtractedProfileViewProps> = ({ prof
           )}
         </div>
       </div>
+
+      {/* Additional Preserved Sections */}
+      {profile.unrecognized_sections && Object.keys(profile.unrecognized_sections).length > 0 && (
+        <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2 text-indigo-400 font-semibold text-sm">
+              <Bookmark className="w-4 h-4" />
+              <span>Additional Preserved Sections</span>
+            </div>
+            <span className="text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-medium">
+              100% Retained
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            {Object.entries(profile.unrecognized_sections).map(([title, content], idx) => (
+              <div key={idx} className="p-4 rounded-xl bg-slate-800/40 border border-slate-700/60 space-y-2">
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider">{title}</h4>
+                <p className="text-xs text-slate-300 whitespace-pre-line leading-relaxed">{content}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
