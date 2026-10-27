@@ -28,12 +28,14 @@ export const JobMatchingPage: React.FC<JobMatchingPageProps> = ({
   const [matchingMode, setMatchingMode] = useState<'demo' | 'custom'>('demo');
   
   const [isMatching, setIsMatching] = useState<boolean>(false);
+  const [isLoadingJobs, setIsLoadingJobs] = useState<boolean>(true);
   const [matchResult, setMatchResult] = useState<MatchResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Fetch tailored demo roles generated on basis of active resume
   useEffect(() => {
     const fetchDemoJobs = async () => {
+      setIsLoadingJobs(true);
       try {
         const jobs = await apiService.getDemoJobs(currentAnalysis?.resume_id);
         setDemoJobs(jobs);
@@ -45,6 +47,8 @@ export const JobMatchingPage: React.FC<JobMatchingPageProps> = ({
       } catch (err) {
         console.error('Failed to load tailored demo jobs:', err);
         setDemoJobs([]);
+      } finally {
+        setIsLoadingJobs(false);
       }
     };
     fetchDemoJobs();
@@ -183,14 +187,26 @@ export const JobMatchingPage: React.FC<JobMatchingPageProps> = ({
               Select one of the tailored benchmark roles generated on the basis of your resume:
             </span>
 
-            {demoJobs.length === 0 ? (
+            {isLoadingJobs ? (
+              <div className="p-8 text-center rounded-2xl bg-slate-950/40 border border-slate-800 flex flex-col items-center justify-center space-y-3">
+                <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+                <h4 className="text-sm font-semibold text-white">Synthesizing Tailored Benchmark Roles...</h4>
+                <p className="text-xs text-slate-400 max-w-md">
+                  Analyzing your verified domain, skills, and background to synthesize target, growth, and adjacent benchmark roles.
+                </p>
+              </div>
+            ) : demoJobs.length === 0 ? (
               <div className="p-8 text-center rounded-2xl bg-slate-950/40 border border-dashed border-slate-800 space-y-3">
                 <Sparkles className="w-8 h-8 text-indigo-400 mx-auto" />
-                <h4 className="text-sm font-semibold text-white">No Resume Provided Yet</h4>
+                <h4 className="text-sm font-semibold text-white">
+                  {currentAnalysis ? "Generating benchmark roles for your profile..." : "No Resume Provided Yet"}
+                </h4>
                 <p className="text-xs text-slate-400 max-w-md mx-auto">
-                  Upload or analyze your resume in the Resume Analysis tab. We will dynamically generate tailored demo roles specifically suited to your background, skills, and experience level.
+                  {currentAnalysis
+                    ? "We are dynamically generating tailored roles for your verified skills. You can also paste a custom job description below to match immediately."
+                    : "Upload or analyze your resume in the Resume Analysis tab. We will dynamically generate tailored demo roles specifically suited to your background, skills, and experience level."}
                 </p>
-                {onNavigate && (
+                {onNavigate && !currentAnalysis && (
                   <button
                     onClick={() => onNavigate('resume-analysis')}
                     className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold transition-colors"

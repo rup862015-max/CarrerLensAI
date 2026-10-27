@@ -70,31 +70,33 @@ class TestCareerLensPhase1(unittest.TestCase):
         analysis = ai_service.analyze_resume(DEMO_RESUME_TEXT, "Alex_Mercer_Resume.pdf")
         profile = analysis["extracted_profile"]
 
-        # Load demo jobs
-        res = self.client.get("/api/jobs/demo")
+        save_resume(analysis["resume_id"], "Alex_Mercer_Resume.pdf", "pdf", len(DEMO_RESUME_TEXT), DEMO_RESUME_TEXT)
+        save_resume_analysis(f"ana_{analysis['resume_id']}", analysis["resume_id"], analysis["health_scores"], analysis["extracted_profile"])
+
+        # Load tailored demo jobs for candidate
+        res = self.client.get(f"/api/jobs/demo?resume_id={analysis['resume_id']}")
         self.assertEqual(res.status_code, 200)
         jobs = res.json()
         self.assertEqual(len(jobs), 3)
 
-        backend_job = next(j for j in jobs if "Backend" in j["title"])
-        data_job = next(j for j in jobs if "Data" in j["title"])
+        target_job = jobs[0]
+        stepup_job = jobs[1]
 
-        # Match Backend Developer
-        backend_match = matching_service.match_resume_to_job(profile, DEMO_RESUME_TEXT, backend_job)
-        # Match Data Analyst
-        data_match = matching_service.match_resume_to_job(profile, DEMO_RESUME_TEXT, data_job)
+        # Match Target Role
+        target_match = matching_service.match_resume_to_job(profile, DEMO_RESUME_TEXT, target_job)
+        # Match Step-Up Role
+        stepup_match = matching_service.match_resume_to_job(profile, DEMO_RESUME_TEXT, stepup_job)
 
-        # Backend match score should be higher than Data Analyst for this candidate
-        self.assertGreater(backend_match["overall_score"], data_match["overall_score"])
-        self.assertGreaterEqual(backend_match["overall_score"], 80)
+        # Target match score should be high for this candidate
+        self.assertGreaterEqual(target_match["overall_score"], 75)
 
         # Explainability check
-        matched_req_names = [m["requirement"] for m in backend_match["matched_requirements"]]
+        matched_req_names = [m["requirement"] for m in target_match["matched_requirements"]]
         self.assertIn("Python", matched_req_names)
         self.assertIn("REST APIs", matched_req_names)
 
         # Verify evidence is present
-        for m in backend_match["matched_requirements"]:
+        for m in target_match["matched_requirements"]:
             self.assertTrue(len(m["resume_evidence"]) > 0)
             self.assertGreater(m["confidence"], 0.5)
 

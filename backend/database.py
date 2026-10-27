@@ -80,10 +80,10 @@ def get_db_info() -> Dict[str, Any]:
 
 
 def get_postgres_connection():
-    """Establishes connection to Neon PostgreSQL."""
+    """Establishes connection to Neon PostgreSQL with a 5-second timeout to prevent event loop blocking."""
     if not PSYCOPG2_AVAILABLE:
         raise RuntimeError("psycopg2-binary is not installed. Please run `pip install psycopg2-binary`.")
-    return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+    return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor, connect_timeout=5)
 
 
 def get_sqlite_connection() -> sqlite3.Connection:

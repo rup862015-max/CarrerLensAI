@@ -116,6 +116,47 @@ class JobGeneratorService:
 
         # Check first 500 characters of resume for title banner (e.g. "FINANCIAL ANALYST | FP&A")
         header_snippet = raw_text[:500].lower()
+        edu_text = " ".join([str(e) for e in profile.get("education", [])]).lower()
+        unrec_text = " ".join([str(v) for v in (profile.get("unrecognized_sections") or {}).values()]).lower()
+        combined_context = f"{header_snippet} {edu_text} {unrec_text}".lower()
+
+        # Domain: Civil & Structural Engineering / Construction
+        civil_keywords = [
+            "civil engineer", "civil engineering", "structural engineer", "structural design",
+            "site engineer", "autocad", "revit", "staad", "staad.pro", "boq", "quantity surveying",
+            "quantity take-off", "quantity takeoff", "concrete", "construction management", "building study"
+        ]
+        if (
+            any(k in combined_context for k in civil_keywords)
+            or any(k in first_title.lower() for k in civil_keywords)
+            or any(s in [
+                "design tools: autocad", "autocad", "revit", "revit basics", "staad.pro",
+                "staad.pro academic exposure", "boq preparation", "quantity take-off",
+                "basic structural concepts", "concrete-work documentation", "measurement records"
+            ] for s in skills_lower)
+        ):
+            title = first_title or ("Graduate Civil Engineer" if any(w in text_lower for w in ["fresher", "graduate", "trainee", "intern"]) or not experiences else "Civil & Structural Engineer")
+            return "civil", title
+
+        # Domain: Mechanical Engineering
+        mech_keywords = ["mechanical engineer", "mechanical engineering", "solidworks", "catia", "ansys", "thermodynamics", "cad/cam", "hvac", "manufacturing engineer", "gd&t"]
+        if (
+            any(k in combined_context for k in mech_keywords)
+            or any(k in first_title.lower() for k in mech_keywords)
+            or any(s in ["solidworks", "catia", "ansys", "fea", "thermodynamics", "hvac", "gd&t"] for s in skills_lower)
+        ):
+            title = first_title or "Mechanical Design Engineer"
+            return "mechanical", title
+
+        # Domain: Electrical & Electronics Engineering
+        elec_keywords = ["electrical engineer", "electronics engineer", "electrical engineering", "pcb", "embedded systems", "circuit design", "vlsi", "microcontroller", "plc"]
+        if (
+            any(k in combined_context for k in elec_keywords)
+            or any(k in first_title.lower() for k in elec_keywords)
+            or any(s in ["circuit design", "pcb design", "matlab", "embedded systems", "plc"] for s in skills_lower)
+        ):
+            title = first_title or "Electrical & Embedded Systems Engineer"
+            return "electrical", title
 
         # Domain: Finance & Accounting
         finance_keywords = ["finance", "financial analyst", "fp&a", "accounting", "budgeting", "variance analysis", "auditing", "valuation"]
@@ -334,6 +375,75 @@ class JobGeneratorService:
                 "Evolve and maintain our design system components for engineering handoff."
             ]
 
+        elif domain == "civil":
+            department = "Civil & Structural Engineering"
+            desc = (
+                f"We are hiring a dedicated {clean_title} to support structural drafting, site measurement documentation, "
+                f"and quantity take-offs. You will work with project engineers to coordinate floor plans, "
+                f"verify concrete quality logs, and ensure building code compliance."
+            )
+            reqs = self._select_requirements(
+                core_candidates=skills,
+                domain_essentials=["AutoCAD", "Revit", "STAAD.Pro", "Basic Structural Concepts", "BOQ Preparation", "Quantity Take-Off", "Concrete-Work Documentation", "Measurement Records", "Safety Awareness", "Technical Report Writing", "Excel"],
+                category_map={
+                    "AutoCAD": "civil_engineering",
+                    "Revit": "civil_engineering",
+                    "STAAD.Pro": "civil_engineering",
+                    "Basic Structural Concepts": "civil_engineering",
+                    "BOQ Preparation": "civil_engineering",
+                    "Quantity Take-Off": "civil_engineering",
+                    "Concrete-Work Documentation": "civil_engineering",
+                    "Measurement Records": "civil_engineering",
+                    "Safety Awareness": "civil_engineering",
+                    "Technical Report Writing": "civil_engineering",
+                    "Excel": "ai_data"
+                }
+            )
+            edu = "Bachelor's degree or Diploma in Civil Engineering, Structural Engineering, or Construction Technology"
+            resps = [
+                "Prepare and verify detailed 2D/3D structural drawings using AutoCAD and Revit.",
+                "Perform basic structural checks and load calculation models using STAAD.Pro.",
+                "Prepare accurate quantity take-offs and compile Bills of Quantities (BOQ).",
+                "Maintain concrete-work inspection records, slump/cube test documentation, and site logs.",
+                "Ensure compliance with municipal building codes and safety regulations."
+            ]
+
+        elif domain == "mechanical":
+            department = "Mechanical Design & Engineering"
+            desc = (
+                f"Seeking a talented {clean_title} to develop 3D CAD models, evaluate thermal/structural simulations, "
+                f"and coordinate prototyping with manufacturing teams."
+            )
+            reqs = self._select_requirements(
+                core_candidates=skills,
+                domain_essentials=["SolidWorks", "CATIA", "ANSYS", "Finite Element Analysis", "Thermodynamics", "HVAC", "GD&T"],
+                category_map={"SolidWorks": "mechanical_engineering", "ANSYS": "mechanical_engineering"}
+            )
+            edu = "Bachelor's degree in Mechanical Engineering or related field"
+            resps = [
+                "Create parametric 3D models and manufacturing drawings in SolidWorks/CATIA.",
+                "Perform finite element analysis (FEA) and thermal simulations using ANSYS.",
+                "Apply GD&T standards to component specifications and inspect production prototypes."
+            ]
+
+        elif domain == "electrical":
+            department = "Electrical & Embedded Systems"
+            desc = (
+                f"Looking for an {clean_title} to design schematics, layout printed circuit boards, "
+                f"and develop firmware for embedded hardware platforms."
+            )
+            reqs = self._select_requirements(
+                core_candidates=skills,
+                domain_essentials=["Circuit Design", "PCB Design", "Embedded Systems", "MATLAB", "PLC"],
+                category_map={"PCB Design": "electrical_engineering", "MATLAB": "electrical_engineering"}
+            )
+            edu = "Bachelor's degree in Electrical Engineering, Electronics, or Computer Engineering"
+            resps = [
+                "Design schematic diagrams and multi-layer PCB layouts.",
+                "Program and debug microcontrollers and embedded firmware.",
+                "Perform circuit simulations and validation testing using MATLAB."
+            ]
+
         else: # Default backend / software engineering
             department = "Platform & Backend Engineering"
             desc = (
@@ -473,6 +583,69 @@ class JobGeneratorService:
                 "Mentor product managers across core squads."
             ]
 
+        elif domain == "civil":
+            title = f"{higher_seniority} Structural Project Engineer & Project Lead"
+            department = "Project Engineering & Construction Management"
+            desc = (
+                f"We are hiring a {title} to oversee structural design execution, cross-discipline BIM coordination, "
+                f"and large-scale construction project deliverables."
+            )
+            reqs = self._select_requirements(
+                core_candidates=skills,
+                domain_essentials=["STAAD.Pro", "Revit", "AutoCAD", "Basic Structural Concepts", "BOQ Preparation", "Scheduling Basics", "Concrete-Work Documentation", "Technical Report Writing", "Safety Awareness", "Excel"],
+                category_map={
+                    "STAAD.Pro": "civil_engineering",
+                    "Revit": "civil_engineering",
+                    "AutoCAD": "civil_engineering",
+                    "Basic Structural Concepts": "civil_engineering",
+                    "BOQ Preparation": "civil_engineering",
+                    "Scheduling Basics": "civil_engineering",
+                    "Concrete-Work Documentation": "civil_engineering"
+                }
+            )
+            resps = [
+                "Lead structural design sign-offs and ensure compliance with building codes and standards.",
+                "Coordinate multidisciplinary BIM models across architectural and structural engineering squads in Revit.",
+                "Oversee project schedules, contractor BOQs, and material procurement pipelines.",
+                "Mentor site engineers on structural concrete quality assurance, safety audits, and contract documentation."
+            ]
+
+        elif domain == "mechanical":
+            title = f"{higher_seniority} Mechanical Systems & Simulation Architect"
+            department = "Advanced Mechanical Engineering"
+            desc = (
+                f"Seeking an experienced {title} to direct mechanical system architecture, complex FEA simulations, "
+                f"and product lifecycle management."
+            )
+            reqs = self._select_requirements(
+                core_candidates=skills,
+                domain_essentials=["SolidWorks", "ANSYS", "Finite Element Analysis", "CATIA", "Thermodynamics", "GD&T"],
+                category_map={"ANSYS": "mechanical_engineering", "SolidWorks": "mechanical_engineering"}
+            )
+            resps = [
+                "Direct mechanical system architecture and engineering sign-offs.",
+                "Perform complex FEA and thermal simulations on critical product assemblies.",
+                "Lead cross-functional reviews with manufacturing and tooling vendors."
+            ]
+
+        elif domain == "electrical":
+            title = f"{higher_seniority} Hardware Systems & Power Architecture Lead"
+            department = "Hardware Engineering Leadership"
+            desc = (
+                f"Looking for a {title} to guide embedded hardware architecture, power distribution design, "
+                f"and compliance certifications."
+            )
+            reqs = self._select_requirements(
+                core_candidates=skills,
+                domain_essentials=["Circuit Design", "PCB Design", "Embedded Systems", "MATLAB", "PLC"],
+                category_map={"PCB Design": "electrical_engineering", "Embedded Systems": "electrical_engineering"}
+            )
+            resps = [
+                "Architect multi-board embedded systems and high-speed PCB layouts.",
+                "Define testing strategies for electromagnetic compatibility (EMC) and reliability.",
+                "Guide junior hardware and firmware engineers."
+            ]
+
         else:
             title = f"{higher_seniority} Distributed Systems & Cloud Architect"
             department = "Platform Architecture"
@@ -608,6 +781,63 @@ class JobGeneratorService:
                 "Synthesize qualitative feedback and quantitative metrics for executive product reviews."
             ]
 
+        elif domain == "civil":
+            title = "BIM Coordinator & Digital Construction Specialist"
+            department = "Digital Engineering & Virtual Construction"
+            desc = (
+                f"Bridge physical site execution and digital architecture by leveraging 3D BIM models, "
+                f"clash detection workflows, and automated quantity estimation."
+            )
+            reqs = self._select_requirements(
+                core_candidates=skills,
+                domain_essentials=["Revit", "AutoCAD", "Quantity Take-Off", "BOQ Preparation", "Scheduling Basics", "Basic Structural Concepts", "Excel", "Technical Report Writing"],
+                category_map={
+                    "Revit": "civil_engineering",
+                    "AutoCAD": "civil_engineering",
+                    "Quantity Take-Off": "civil_engineering",
+                    "BOQ Preparation": "civil_engineering",
+                    "Scheduling Basics": "civil_engineering",
+                    "Excel": "ai_data"
+                }
+            )
+            resps = [
+                "Build and coordinate 3D BIM models in Revit for clash detection and constructability reviews.",
+                "Extract automated quantity take-offs directly from parametric BIM schedules.",
+                "Facilitate digital handover packages and technical drawings for client consultants and project managers."
+            ]
+
+        elif domain == "mechanical":
+            title = "Manufacturing Automation & Quality Engineer"
+            department = "Manufacturing & Operations"
+            desc = (
+                f"Optimize manufacturing operations, automated inspection tooling, and quality assurance processes."
+            )
+            reqs = self._select_requirements(
+                core_candidates=skills,
+                domain_essentials=["SolidWorks", "GD&T", "ANSYS", "Finite Element Analysis"],
+                category_map={"SolidWorks": "mechanical_engineering"}
+            )
+            resps = [
+                "Design automated inspection fixtures and tooling in SolidWorks.",
+                "Establish quality control standards and GD&T tolerance checks."
+            ]
+
+        elif domain == "electrical":
+            title = "IoT & Firmware Integration Specialist"
+            department = "Connected Systems & IoT"
+            desc = (
+                f"Integrate sensors, microcontrollers, and wireless communications into connected smart devices."
+            )
+            reqs = self._select_requirements(
+                core_candidates=skills,
+                domain_essentials=["Embedded Systems", "Circuit Design", "PCB Design", "MATLAB"],
+                category_map={"Embedded Systems": "electrical_engineering"}
+            )
+            resps = [
+                "Develop embedded firmware for connected IoT devices and sensor arrays.",
+                "Validate wireless hardware interfaces and low-power circuit operation."
+            ]
+
         else: # Software -> DevOps / Cloud Infrastructure
             title = "Cloud Infrastructure & DevOps Engineer"
             department = "Cloud Platform Engineering"
@@ -691,6 +921,9 @@ class JobGeneratorService:
         if not raw_title or len(raw_title) < 4:
             defaults = {
                 "finance": "Financial Analyst",
+                "civil": "Civil & Structural Engineer",
+                "mechanical": "Mechanical Design Engineer",
+                "electrical": "Electrical & Systems Engineer",
                 "frontend": "Frontend Engineer",
                 "ai_data": "Machine Learning Engineer",
                 "data_analytics": "Data & BI Analyst",

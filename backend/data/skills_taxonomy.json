@@ -110,6 +110,35 @@
       { "id": "git", "name": "Git", "aliases": ["github", "gitlab", "version control"], "domain": "Development" },
       { "id": "agile", "name": "Agile", "aliases": ["scrum", "kanban", "sprints"], "domain": "Methodology" },
       { "id": "tdd", "name": "TDD", "aliases": ["test driven development", "unit testing", "pytest", "jest"], "domain": "Testing" }
+    ],
+    "civil_engineering": [
+      { "id": "autocad", "name": "AutoCAD", "aliases": ["design tools: autocad", "cad", "autocad 2d", "autocad 3d", "autocad drafting"], "domain": "Civil / Architecture" },
+      { "id": "revit", "name": "Revit", "aliases": ["revit basics", "autodesk revit", "bim revit", "revit architecture"], "domain": "Civil / BIM" },
+      { "id": "staad_pro", "name": "STAAD.Pro", "aliases": ["staad.pro academic exposure", "staad", "staad pro", "staad.pro v8i", "structural analysis software"], "domain": "Structural Engineering" },
+      { "id": "boq_preparation", "name": "BOQ Preparation", "aliases": ["boq", "bill of quantities", "boq preparation & estimation"], "domain": "Quantity Surveying / Civil" },
+      { "id": "quantity_takeoff", "name": "Quantity Take-Off", "aliases": ["quantity take-off", "quantity takeoff", "material estimation", "quantity surveying"], "domain": "Quantity Surveying" },
+      { "id": "basic_structural_concepts", "name": "Basic Structural Concepts", "aliases": ["structural analysis", "structural design", "mechanics of structures", "rcc design"], "domain": "Structural Engineering" },
+      { "id": "concrete_work_documentation", "name": "Concrete-Work Documentation", "aliases": ["concrete quality records", "concrete-work documentation", "slump test logs", "cube test", "concrete quality record template"], "domain": "Construction QA/QC" },
+      { "id": "measurement_records", "name": "Measurement Records", "aliases": ["measurement sheet", "measurement book", "site measurements"], "domain": "Site Engineering" },
+      { "id": "safety_awareness", "name": "Safety Awareness", "aliases": ["construction safety awareness", "site safety", "safety regulations"], "domain": "Construction Safety" },
+      { "id": "technical_report_writing", "name": "Technical Report Writing", "aliases": ["technical reports", "engineering documentation", "site inspection reports"], "domain": "Engineering Documentation" },
+      { "id": "scheduling_basics", "name": "Scheduling Basics", "aliases": ["construction scheduling", "project scheduling", "ms project", "primavera"], "domain": "Project Planning" }
+    ],
+    "mechanical_engineering": [
+      { "id": "solidworks", "name": "SolidWorks", "aliases": ["solid works", "solidworks 3d"], "domain": "Mechanical CAD" },
+      { "id": "catia", "name": "CATIA", "aliases": ["catia v5"], "domain": "Mechanical CAD" },
+      { "id": "ansys", "name": "ANSYS", "aliases": ["ansys workbench", "ansys fea"], "domain": "CAE / Simulation" },
+      { "id": "fea", "name": "Finite Element Analysis", "aliases": ["fea", "fem", "structural simulation"], "domain": "CAE / Analysis" },
+      { "id": "thermodynamics", "name": "Thermodynamics", "aliases": ["heat transfer", "thermal analysis"], "domain": "Thermal Engineering" },
+      { "id": "hvac", "name": "HVAC", "aliases": ["hvac design", "refrigeration", "air conditioning"], "domain": "Building Services" },
+      { "id": "gdt", "name": "GD&T", "aliases": ["geometric dimensioning and tolerancing"], "domain": "Manufacturing & Quality" }
+    ],
+    "electrical_engineering": [
+      { "id": "circuit_design", "name": "Circuit Design", "aliases": ["schematic capture", "analog circuits", "digital circuits"], "domain": "Hardware Engineering" },
+      { "id": "pcb_design", "name": "PCB Design", "aliases": ["altium", "eagle pcb", "kicad", "pcb layout"], "domain": "Hardware Engineering" },
+      { "id": "matlab", "name": "MATLAB", "aliases": ["simulink", "matlab/simulink"], "domain": "Engineering Simulation" },
+      { "id": "embedded_systems", "name": "Embedded Systems", "aliases": ["embedded c", "microcontrollers", "arm cortex", "firmware"], "domain": "Embedded / Hardware" },
+      { "id": "plc", "name": "PLC", "aliases": ["plc programming", "scada", "industrial automation"], "domain": "Industrial Automation" }
     ]
   },
   "taxonomy_relationships": {
@@ -128,6 +157,17 @@
     "power_bi": ["sql", "excel", "tableau", "data_visualization", "fpa"],
     "product_management": ["roadmapping", "user_stories", "jira", "agile", "stakeholder_management"],
     "seo": ["sem", "google_analytics", "content_strategy"],
-    "ui_ux_design": ["figma", "user_research", "design_systems"]
+    "ui_ux_design": ["figma", "user_research", "design_systems"],
+    "autocad": ["revit", "technical_report_writing", "staad_pro"],
+    "revit": ["autocad", "basic_structural_concepts", "scheduling_basics"],
+    "staad_pro": ["basic_structural_concepts", "autocad", "concrete_work_documentation"],
+    "boq_preparation": ["quantity_takeoff", "excel", "measurement_records"],
+    "quantity_takeoff": ["boq_preparation", "measurement_records", "excel"],
+    "basic_structural_concepts": ["staad_pro", "concrete_work_documentation", "autocad"],
+    "concrete_work_documentation": ["measurement_records", "safety_awareness", "basic_structural_concepts"],
+    "solidworks": ["catia", "ansys", "fea", "gdt"],
+    "ansys": ["fea", "solidworks", "thermodynamics"],
+    "embedded_systems": ["circuit_design", "pcb_design", "matlab"],
+    "pcb_design": ["circuit_design", "embedded_systems"]
   }
 }
